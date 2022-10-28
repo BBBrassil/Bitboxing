@@ -19,4 +19,4 @@ def send_msg(socket, msg):
     socket.send(msg.encode())
 
 def receive_msg(socket):
-    return socket.recv(2048).decode())
+    return socket.recv(2048).decode()
