@@ -1,3 +1,5 @@
+import socket
+
 delim = '|'
 
 def find_request(item_code):
@@ -20,3 +22,14 @@ def send_msg(socket, msg):
 
 def receive_msg(socket):
     return socket.recv(2048).decode()
+
+
+
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect(('127.0.0.1', 9999))
+
+send_msg(s, 'FIND')
+print(receive_msg(s))
+
+s.close()
