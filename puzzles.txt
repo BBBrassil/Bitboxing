@@ -1,0 +1,34 @@
+1 Cipher
+
+2
+Q:
+	What is the end of everything?
+A:
+	G
+
+3
+Q:
+	What is the 8th Fibonacci number?
+A:
+	13
+
+4
+Q;
+	682 One number is correct and well placed
+	614 One number is correct but in the wrong place
+	206 Two numbers are correct but in the wrong places
+	738 Nothing is correct
+	870 One number is correct but in the wrong place
+	???
+A:
+	042
+
+5
+Q:
+	Five people were eating apples.
+	A finished before B, but behind C.
+	D finished before E, but behind B.
+	What was the finishing order?
+A:
+	CABDE
+	
