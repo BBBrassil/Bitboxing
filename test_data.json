@@ -1,0 +1,52 @@
+{
+  "dict": {
+    "1": {
+      "puzzle": {
+        "question": "Is 3 prime? (y/n)",
+        "answer": "y",
+        "hint": "Use math"
+      },
+      "stats": {
+        "A": {
+          "time_found": 1667706329190294300,
+          "time_solved": 1667706329192301100,
+          "attempts": 3
+        },
+        "B": {
+          "time_found": 1667706329195300200,
+          "time_solved": null,
+          "attempts": 1
+        },
+        "C": {
+          "time_found": 1667706329196300600,
+          "time_solved": 1667706329197300100,
+          "attempts": 2
+        },
+        "D": {
+          "time_found": 1667706329197808100,
+          "time_solved": 1667706329197808100,
+          "attempts": 1
+        }
+      }
+    },
+    "2": {
+      "puzzle": {
+        "question": "Is 4 prime? (y/n)",
+        "answer": "n",
+        "hint": "Use math again"
+      },
+      "stats": {
+        "A": {
+          "time_found": 1667706329198822000,
+          "time_solved": 1667706329200821800,
+          "attempts": 3
+        },
+        "B": {
+          "time_found": 1667706396462638500,
+          "time_solved": null,
+          "attempts": 0
+        }
+      }
+    }
+  }
+}
