@@ -7,6 +7,11 @@
         "hint": "Julius"
       },
       "stats": {
+        "A": {
+          "time_found": 1667850116845148200,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     },
     "2": {
@@ -16,6 +21,11 @@
         "hint": "What is the end of \"everything\"?"
       },
       "stats": {
+        "A": {
+          "time_found": 1667850116847588900,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     },
     "3": {
@@ -25,6 +35,11 @@
         "hint": "0, 1, 1, 2..."
       },
       "stats": {
+        "A": {
+          "time_found": 1667850116848592400,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     },
     "4": {
@@ -34,6 +49,11 @@
         "hint": "* Correct value\n** Correct value and in the right place"
       },
       "stats": {
+        "A": {
+          "time_found": 1667850116849594900,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     },
     "5": {
@@ -43,6 +63,11 @@
         "hint": "Enter the letters in order without space or punctuation. (e.g. ABCDE)"
       },
       "stats": {
+        "A": {
+          "time_found": 1667850116851847500,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     }
   }

@@ -10,26 +10,17 @@ sender_id = "A"
 version = "0.1"
 sender = BitboxingSender(sender_id, version)
 
-for x in "12345":
+def make_request(ip, port, msg):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((ip, port))
     
-    request = sender.handle_find(x)
-    bbtp.send_msg(s, request)
-    test.print_request(request)
-    response = bbtp.receive_msg(s)
-    test.print_response(response)
+    bbtp.send_msg(s, msg)
+    test.print_request(msg)
+    msg = bbtp.receive_msg(s)
+    test.print_response(msg)
     
     s.close()
     
 for x in "12345":
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((ip, port))
-    
-    request = sender.handle_hint(x)
-    bbtp.send_msg(s, request)
-    test.print_request(request)
-    response = bbtp.receive_msg(s)
-    test.print_response(response)
-    
-    s.close()
+    make_request(ip, port, sender.handle_find(x))
+    make_request(ip, port, sender.handle_hint(x))
