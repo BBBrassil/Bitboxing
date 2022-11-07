@@ -14,6 +14,18 @@ for x in "12345":
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((ip, port))
     
+    request = sender.handle_find(x)
+    bbtp.send_msg(s, request)
+    test.print_request(request)
+    response = bbtp.receive_msg(s)
+    test.print_response(response)
+    
+    s.close()
+    
+for x in "12345":
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((ip, port))
+    
     request = sender.handle_hint(x)
     bbtp.send_msg(s, request)
     test.print_request(request)
