@@ -41,7 +41,7 @@ def serve(receiver):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     s.bind(("", port))
-    s.listen()
+    s.listen(100)
     
     print(f"Server is listening to port {port}...")
     
@@ -59,7 +59,7 @@ def serve(receiver):
 
 if __name__ == "__main__":
     version = "0.1"
-    path = "test_data.json"
+    path = "data.json"
     receiver = BitboxingReceiver(version, path)
     
     serve(receiver)

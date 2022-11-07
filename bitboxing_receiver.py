@@ -32,7 +32,7 @@ class BitboxingReceiver:
     
     def handle_find(self, sender, cache):
         if not self._db.is_valid_cache(cache):
-            return self.handle_error(bbtp.STATUS_NOT_FOUND)
+            return self.handle_error(sender, bbtp.STATUS_NOT_FOUND)
         elif self._db[cache].stats(sender).found():
             data = self._db[cache].puzzle().question()
             msg = BitboxingReceiver._to_json(data)
@@ -46,17 +46,17 @@ class BitboxingReceiver:
     
     def handle_hint(self, sender, cache):
         if not self._db.is_valid_cache(cache):
-            return self.handle_error(bbtp.STATUS_NOT_FOUND)
+            return self.handle_error(sender, bbtp.STATUS_NOT_FOUND)
         elif not self._db[cache].stats(sender).found() or self._db[cache].stats(sender).solved():
-            return self.handle_error(bbtp.STATUS_OUT_OF_ORDER)
+            return self.handle_error(sender, bbtp.STATUS_OUT_OF_ORDER)
         else:
             return bbtp.format_response(bbtp.STATUS_OK, self._db[cache].puzzle().hint())
     
     def handle_solve(self, sender, cache, guess):
         if not self._db.is_valid_cache(cache):
-            return self.handle_error(bbtp.STATUS_NOT_FOUND)
+            return self.handle_error(sender, bbtp.STATUS_NOT_FOUND)
         elif not self._db[cache].stats(sender).found() or self._db[cache].stats(sender).solved():
-            return self.handle_error(bbtp.STATUS_OUT_OF_ORDER)
+            return self.handle_error(sender, bbtp.STATUS_OUT_OF_ORDER)
         else:
             is_correct = self._db[cache].try_to_solve(sender, guess, time.time_ns())
             self.flush()
@@ -74,12 +74,12 @@ class BitboxingReceiver:
             msg = BitboxingReceiver._to_json(data)
             return bbtp.format_response(bbtp.STATUS_OK, msg)
         except Exception as ex:
-            return self.handle_error(bbtp.STATUS_EXCEPTION, repr(ex))
+            return self.handle_error(sender, bbtp.STATUS_EXCEPTION, repr(ex))
         
     
     def handle_cache_leaderboard(self, sender, cache, count):
         if not self._db.is_valid_cache(cache):
-            return self.handle_error(bbtp.STATUS_NOT_FOUND)
+            return self.handle_error(sender, bbtp.STATUS_NOT_FOUND)
         else:
             try:
                 n = 10 if int(count) < 0 else int(count)
@@ -87,7 +87,7 @@ class BitboxingReceiver:
                 msg = BitboxingReceiver._to_json(data)
                 return bbtp.format_response(bbtp.STATUS_OK, msg)
             except Exception as ex:
-                return self.handle_error(bbtp.STATUS_EXCEPTION, repr(ex))
+                return self.handle_error(sender, bbtp.STATUS_EXCEPTION, repr(ex))
     
     def flush(self):
         try:
