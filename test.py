@@ -20,7 +20,8 @@ def print_request(msg):
         print(" " * 16 + f"{i}: {args[i]}")
     print(f"Body Length     {len(body)}")
     print("-" * WIDTH)
-    print(body)
+    for x in body.split("\n"):
+        print(x)
     print("*" * WIDTH)
     print()
     
@@ -34,7 +35,8 @@ def print_response(msg):
     print(f"Status Code     {status_code}")
     print(f"Body            ({len(body)} bytes)")
     print("-" * WIDTH)
-    print(body)
+    for x in body.split("\n"):
+        print(x)
     print("*" * WIDTH)
     print()
 

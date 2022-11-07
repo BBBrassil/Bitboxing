@@ -7,6 +7,11 @@
         "hint": "Julius"
       },
       "stats": {
+        "A": {
+          "time_found": 1667842170125784400,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     },
     "2": {
@@ -16,6 +21,11 @@
         "hint": "What is the end of \"everything\"?"
       },
       "stats": {
+        "A": {
+          "time_found": 1667842170128182000,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     },
     "3": {
@@ -25,15 +35,25 @@
         "hint": "0, 1, 1, 2..."
       },
       "stats": {
+        "A": {
+          "time_found": 1667842170129182200,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     },
     "4": {
       "puzzle": {
-        "question": "682 1✓\n1*\n206 2*\n738 0\n870 1*\n???",
+        "question": "682 1*1-\n206 2-\n738 0\n870 1-\n???",
         "answer": "042",
-        "hint": "✓ Correct and in the right place\n* Correct but in the wrong place"
+        "hint": "* Correct and in the right place\n- Correct but in the wrong place"
       },
       "stats": {
+        "A": {
+          "time_found": 1667842170130235100,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     },
     "5": {
@@ -43,6 +63,11 @@
         "hint": "Enter the letters in order without space or punctuation. (e.g. ABCDE)"
       },
       "stats": {
+        "A": {
+          "time_found": 1667842170131394800,
+          "time_solved": null,
+          "attempts": 0
+        }
       }
     }
   }

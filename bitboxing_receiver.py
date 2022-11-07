@@ -34,14 +34,12 @@ class BitboxingReceiver:
         if not self._db.is_valid_cache(cache):
             return self.handle_error(sender, bbtp.STATUS_NOT_FOUND)
         elif self._db[cache].stats(sender).found():
-            data = self._db[cache].puzzle().question()
-            msg = BitboxingReceiver._to_json(data)
+            msg = self._db[cache].puzzle().question()
             return bbtp.format_response(bbtp.STATUS_WITHOUT_CHANGE, msg)
         else:
             self._db[cache].find(sender, time.time_ns())
             self.flush()
-            data = self._db[cache].puzzle().question()
-            msg = BitboxingReceiver._to_json(data)
+            msg = self._db[cache].puzzle().question()
             return bbtp.format_response(bbtp.STATUS_OK, msg)
     
     def handle_hint(self, sender, cache):
@@ -50,7 +48,8 @@ class BitboxingReceiver:
         elif not self._db[cache].stats(sender).found() or self._db[cache].stats(sender).solved():
             return self.handle_error(sender, bbtp.STATUS_OUT_OF_ORDER)
         else:
-            return bbtp.format_response(bbtp.STATUS_OK, self._db[cache].puzzle().hint())
+            msg = self._db[cache].puzzle().hint()
+            return bbtp.format_response(bbtp.STATUS_OK, msg)
     
     def handle_solve(self, sender, cache, guess):
         if not self._db.is_valid_cache(cache):
