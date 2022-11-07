@@ -3,7 +3,7 @@ import bbtp
 import json
 import time
 
-class BitboxingReceiver: 
+class BitboxingReceiver:
     def __init__(self, version, path):
         self._version = version
         self._path = path
@@ -26,19 +26,23 @@ class BitboxingReceiver:
     def is_authenticated(self, sender):
         return True
     
-    def handle_error(self, sender, error_code):
+    def handle_error(self, sender, error_code, msg=""):
         print(f"Request from '{sender}' generated error '{error_code}'.")
-        return bbtp.format_response(error_code)
+        return bbtp.format_response(error_code, msg)
     
     def handle_find(self, sender, cache):
         if not self._db.is_valid_cache(cache):
             return self.handle_error(bbtp.STATUS_NOT_FOUND)
         elif self._db[cache].stats(sender).found():
-            return self.handle_error(bbtp.STATUS_OUT_OF_ORDER)
+            data = self._db[cache].puzzle().question()
+            msg = BitboxingReceiver._to_json(data)
+            return bbtp.format_response(bbtp.STATUS_WITHOUT_CHANGE, msg)
         else:
             self._db[cache].find(sender, time.time_ns())
             self.flush()
-            return bbtp.format_response(bbtp.STATUS_OK, self._db[cache].puzzle().question())
+            data = self._db[cache].puzzle().question()
+            msg = BitboxingReceiver._to_json(data)
+            return bbtp.format_response(bbtp.STATUS_OK, msg)
     
     def handle_hint(self, sender, cache):
         if not self._db.is_valid_cache(cache):
@@ -59,19 +63,43 @@ class BitboxingReceiver:
             return bbtp.format_response(bbtp.STATUS_OK if is_correct else bbtp.STATUS_INCORRECT)
     
     def handle_stats(self, sender, player):
-        return bbtp.format_response(bbtp.STATUS_OK, json.dumps(self._db.stats(player).to_dict(), indent=2))
+        data = self._db.stats(player).to_dict()
+        msg = BitboxingReceiver._to_json(data)
+        return bbtp.format_response(bbtp.STATUS_OK, msg)
     
-    def handle_leaderboard_game(self, sender):
-        return bbtp.format_response(bbtp.STATUS_OK)
+    def handle_leaderboard(self, sender, count):
+        try:
+            n = 10 if int(count) < 0 else int(count)
+            data = [x.to_dict() for x in self._db.top(n)]
+            msg = BitboxingReceiver._to_json(data)
+            return bbtp.format_response(bbtp.STATUS_OK, msg)
+        except Exception as ex:
+            return self.handle_error(bbtp.STATUS_EXCEPTION, repr(ex))
+        
     
-    def handle_leaderboard_cache(self, sender, cache):
-        return bbtp.format_response(bbtp.STATUS_OK)
+    def handle_cache_leaderboard(self, sender, cache, count):
+        if not self._db.is_valid_cache(cache):
+            return self.handle_error(bbtp.STATUS_NOT_FOUND)
+        else:
+            try:
+                n = 10 if int(count) < 0 else int(count)
+                data = [x.to_dict() for x in self._db[cache].top(n)]
+                msg = BitboxingReceiver._to_json(data)
+                return bbtp.format_response(bbtp.STATUS_OK, msg)
+            except Exception as ex:
+                return self.handle_error(bbtp.STATUS_EXCEPTION, repr(ex))
     
     def flush(self):
         try:
             with open(self._path, 'w') as f:
-                s = json.dumps(self._db.to_dict(), indent=2)
+                data = self._db.to_dict()
+                s = BitboxingReceiver._to_json(data)
                 f.write(s)
         except:
             print(f"Failed to write to '{self._path}'!")
             print("Exiting without saving data...")
+    
+    @staticmethod
+    def _to_json(data):
+        return json.dumps(data, indent=2)
+    

@@ -17,8 +17,8 @@ class BitboxingSender:
     def handle_stats(self, player):
         return bbtp.format_request(self._id, self._version, "STATS", player)
     
-    def handle_leaderboard_game(self):
-        return bbtp.format_request(self._id, self._version, "LEADERBOARD")
+    def handle_leaderboard(self, count=-1):
+        return bbtp.format_request(self._id, self._version, "LEADERBOARD", str(count))
         
-    def handle_leaderboard_cache(self, cache):
-        return bbtp.format_request(self._id, self._version, "LEADERBOARD", cache)
+    def handle_cache_leaderboard(self, cache, count=-1):
+        return bbtp.format_request(self._id, self._version, "CACHE_LEADERBOARD", cache, str(count))

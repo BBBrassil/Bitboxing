@@ -13,9 +13,9 @@ sender = BitboxingSender(sender_id, version)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((ip, port))
 
-request = sender.handle_stats("B")
-test.print_request(request)
+request = sender.handle_leaderboard()
 bbtp.send_msg(s, request)
+test.print_request(request)
 
 response = bbtp.receive_msg(s)
 test.print_response(response)

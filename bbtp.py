@@ -2,6 +2,7 @@ DELIM_INLINE = "|"
 DELIM_ENDLINE = "\r\n"
 
 STATUS_BAD_REQUEST = "Bad Request"
+STATUS_EXCEPTION = "Exception"
 STATUS_INCORRECT = "Incorrect"
 STATUS_NOT_FOUND = "Not Found"
 STATUS_OK = "OK"
@@ -9,6 +10,7 @@ STATUS_OUT_OF_ORDER = "Out of Order"
 STATUS_UNAUTHENTICATED = "Unauthenticated"
 STATUS_UNRECOGNIZED_METHOD = "Unrecognized Method"
 STATUS_VERSION_NOT_SUPPORTED = "Version Not Supported"
+STATUS_WITHOUT_CHANGE = "Without Change"
 STATUS_WRONG_NUM_OF_PARAMS = "Wrong Number of Parameters"
 
 def format_header(sender, version):
@@ -51,7 +53,7 @@ def parse_response(msg):
     return (lines[0], lines[1] if len(lines) > 1 else "")
 
 def is_valid_method(s):
-    methods = {"FIND", "HINT", "SOLVE", "STATS", "LEADERBOARD"}
+    methods = {"FIND", "HINT", "SOLVE", "STATS", "LEADERBOARD", "CACHE_LEADERBOARD"}
     
     return s in methods
 
