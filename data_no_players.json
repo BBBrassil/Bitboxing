@@ -1,49 +1,44 @@
 {
   "dict": {
-    "1": {
+    "TDQXO": {
       "puzzle": {
         "question": "Dlsjvtl av Ipaivepun! Aopz pz aol mpyza wbggsl!",
         "answer": "Welcome to Bitboxing! This is the first puzzle!",
         "hint": "Julius"
       },
-      "stats": {
-      }
+      "stats": {}
     },
-    "2": {
+    "MVMKB": {
       "puzzle": {
         "question": "What is the end of everything?",
         "answer": "G",
         "hint": "What is the end of \"everything\"?"
       },
-      "stats": {
-      }
+      "stats": {}
     },
-    "3": {
+    "JLPOY": {
       "puzzle": {
         "question": "What is the 8th Fibonacci number?",
         "answer": "13",
         "hint": "0, 1, 1, 2..."
       },
-      "stats": {
-      }
+      "stats": {}
     },
-    "4": {
+    "XRUZD": {
       "puzzle": {
         "question": "682 1**\n614 1*\n206 2*\n738 0\n870 1*\n???",
         "answer": "042",
         "hint": "* Correct value\n** Correct value and in the right place"
       },
-      "stats": {
-      }
+      "stats": {}
     },
-    "5": {
+    "IBQVH": {
       "puzzle": {
         "question": "Five people were eating apples.\nA finished before B, but behind C.\nD finished before E, but behind B.\nWhat was the finishing order?",
         "answer": "CABDE",
         "hint": "Enter the letters in order without space or punctuation. (e.g. ABCDE)"
       },
-      "stats": {
-      }
+      "stats": {}
     }
   }
 }

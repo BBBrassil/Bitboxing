@@ -17,8 +17,9 @@ class BitboxingReceiver:
         except Exception as ex:
             print(f"Error: '{repr(ex)}'!")
             print(f"Failed to read from '{path}'!")
-            print("Launching without data...")
+            print("Launching with default data...")
             self._db = CacheDatabase()
+            self.flush()
     
     def supports(self, version):
         return version == self._version

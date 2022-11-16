@@ -610,8 +610,10 @@ class CacheDatabase:
     def __init__(self, d = None):
         """
         Constructor.
+        Generates data with just puzzle info and no player info if no data is
+        passed.
 
-        @param {dict} d Python dictionary containing cache data (default empty)
+        @param {dict} d Python dictionary containing cache data (optional)
         """
 
         self._dict = d if d else CacheDatabase._get_default_data()
@@ -619,15 +621,46 @@ class CacheDatabase:
     @staticmethod
     def _get_default_data():
         """
-        Generates default data for testing.
+        Generates default cache data.
 
         @return {dict}
         """
         
-        record1 = CacheRecord(Puzzle("Is 3 prime? (y/n)", "y", "Use math"))
-        record2 = CacheRecord(Puzzle("Is 4 prime? (y/n)", "n", "Use math again"))
-        
-        return {'1': record1, '2': record2}
+        return {
+            'TDQXO' : CacheRecord(Puzzle(
+                "Dlsjvtl av Ipaivepun! Aopz pz aol mpyza wbggsl!",
+                "Welcome to Bitboxing! This is the first puzzle!",
+                "Julius"
+            )),
+            'MVMKB' : CacheRecord(Puzzle(
+                "What is the end of everything?",
+                "G",
+                "What is the end of \"everything\"?"
+            )),
+            'JLPOY' : CacheRecord(Puzzle(
+                "What is the 8th Fibonacci number?",
+                "13",
+                "0, 1, 1, 2..."
+            )),
+            'XRUZD' : CacheRecord(Puzzle(
+                "682 1**\n"
+                "614 1*\n"
+                "206 2*\n"
+                "738 0\n"
+                "870 1*\n"
+                "???",
+                "042",
+                "* Correct value\n** Correct value and in the right place"
+            )),
+            'IBQVH' : CacheRecord(Puzzle(
+                "Five people were eating apples.\n"
+                "A finished before B, but behind C.\n"
+                "D finished before E, but behind B.\n"
+                "What was the finishing order?",
+                "CABDE",
+                "Enter the letters in order without space or punctuation. (e.g. ABCDE)"
+            )),
+        }
 
     def is_valid_cache(self, cache):
         """

@@ -1,74 +1,44 @@
 {
   "dict": {
-    "1": {
+    "TDQXO": {
       "puzzle": {
         "question": "Dlsjvtl av Ipaivepun! Aopz pz aol mpyza wbggsl!",
         "answer": "Welcome to Bitboxing! This is the first puzzle!",
         "hint": "Julius"
       },
-      "stats": {
-        "A": {
-          "time_found": 1667850116845148200,
-          "time_solved": null,
-          "attempts": 0
-        }
-      }
+      "stats": {}
     },
-    "2": {
+    "MVMKB": {
       "puzzle": {
         "question": "What is the end of everything?",
         "answer": "G",
         "hint": "What is the end of \"everything\"?"
       },
-      "stats": {
-        "A": {
-          "time_found": 1667850116847588900,
-          "time_solved": null,
-          "attempts": 0
-        }
-      }
+      "stats": {}
     },
-    "3": {
+    "JLPOY": {
       "puzzle": {
         "question": "What is the 8th Fibonacci number?",
         "answer": "13",
         "hint": "0, 1, 1, 2..."
       },
-      "stats": {
-        "A": {
-          "time_found": 1667850116848592400,
-          "time_solved": null,
-          "attempts": 0
-        }
-      }
+      "stats": {}
     },
-    "4": {
+    "XRUZD": {
       "puzzle": {
         "question": "682 1**\n614 1*\n206 2*\n738 0\n870 1*\n???",
         "answer": "042",
         "hint": "* Correct value\n** Correct value and in the right place"
       },
-      "stats": {
-        "A": {
-          "time_found": 1667850116849594900,
-          "time_solved": null,
-          "attempts": 0
-        }
-      }
+      "stats": {}
     },
-    "5": {
+    "IBQVH": {
       "puzzle": {
         "question": "Five people were eating apples.\nA finished before B, but behind C.\nD finished before E, but behind B.\nWhat was the finishing order?",
         "answer": "CABDE",
         "hint": "Enter the letters in order without space or punctuation. (e.g. ABCDE)"
       },
-      "stats": {
-        "A": {
-          "time_found": 1667850116851847500,
-          "time_solved": null,
-          "attempts": 0
-        }
-      }
+      "stats": {}
     }
   }
 }
