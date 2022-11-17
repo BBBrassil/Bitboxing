@@ -5,6 +5,12 @@ class BitboxingSender:
         self._id = sender_id
         self._version = version
     
+    def id(self):
+        return self._id
+    
+    def version(self):
+        return self._version
+    
     def handle_find(self, cache):
         return bbtp.format_request(self._id, self._version, "FIND", cache)
     
