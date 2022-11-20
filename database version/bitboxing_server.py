@@ -46,7 +46,8 @@ def solveHandler(username, args):
     else:
         return bitboxing_database.solvePuzzle(username, args[0], args[1])
 
-
+def statsHandler(username):
+    return bitboxing_database.getStats(username)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -76,7 +77,7 @@ while True:
     methods = {"LOGIN", "NEW_USER", "FIND", "HINT", "SOLVE", "STATS", "LEADERBOARD", "CACHE_LEADERBOARD"}
     '''
 
-    #verify at length of clientMessage is at least two
+    #verify length of clientMessage is three
     if(len(clientMessage) != 3):
         serverResponse = ("1", "Wrong Number of parameters")
     else:
@@ -93,6 +94,8 @@ while True:
                 serverResponse = hintHandler(clientMessage[0], clientMessage[2])
             elif(clientMessage[1] == "SOLVE"):
                 serverResponse = solveHandler(clientMessage[0], clientMessage[2])
+            elif(clientMessage[1] == "STATS"):
+                serverResponse = statsHandler(clientMessage[0])
             else:
                 serverResponse = ("2", "Not valid protocol")
         else:
