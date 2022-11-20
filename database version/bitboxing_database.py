@@ -283,6 +283,50 @@ def getHint(username, puzzle_num):
         return ("3", "DATABASE ERROR")
 
 
+'''
+Method for printing user stats
+parameter: username -- user should already be logged in
+
+'''
+
+def getStats(username):
+    #establish connection with database
+    con = connection()
+    #create cursor object to execute database functions
+    cur = con.cursor()
+    
+    try:
+        stats = ''
+        cur.execute("SELECT puzzle_num from Puzzles")
+        puzzles = cur.fetchall()
+        cur.execute("SELECT * from Users_Puzzles where username=?", (username,))
+        rows = cur.fetchall()
+        stats = stats + "Stats for " + username + ":\n"
+        if not rows:
+            stats = stats + "No puzzles found"
+        else:
+            for num in puzzles:
+                found = False
+                for line in rows:
+                    if int(line[1])==int(num[0]):
+                        found = True
+                        if len(line) != 4:
+                            con.close()
+                            return ("1", "DATABASE ERROR")
+                        else:
+                            stats = stats + "Puzzle " + line[1] + "\n"
+                            stats = stats + "\tTime Found: " + line[2] + "\n"
+                            stats = stats + "\tTime Completed: " + line[3] + "\n"
+                        break
+                if found == False:
+                    
+                    stats = stats + "Puzzle " + str(num[0]) + ": not found\n"    
+        con.close()
+        return ("0", stats)
+    except:
+        print(Error)
+        con.close()
+        return ("1", "DATABASE ERROR")
 
 '''
 Method for droping all tables
@@ -300,9 +344,13 @@ def dropTables():
     
 
 def main():
-    dropTables()
+    #dropTables()
     initializeTables()
     
+    print(getStats("A")[1])
+    print(getStats("B")[1])
+    
+    '''
     print("Testing adding new Users")
     print(newUser("A", "A"))
     print(newUser("B", "B"))
@@ -361,12 +409,11 @@ def main():
     print("testing user hasn't found puzzle")
     print(getHint("A", 5))
     print("")
-    
+    '''
 
 if __name__ == '__main__':
     main()
     
-
 
 
 
