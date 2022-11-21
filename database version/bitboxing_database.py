@@ -51,7 +51,7 @@ def initializeTables():
             print(Error)
             
     #check if User table has been created. If not, create table
-    cur.execute("CREATE TABLE IF NOT EXISTS Users_Puzzles(username TEXT NOT NULL, puzzle_num TEXT NOT NULL, time_found TEXT, time_completed TEXT, PRIMARY KEY(username, puzzle_num), FOREIGN KEY(username) REFERENCES Users(username), FOREIGN KEY(puzzle_num) REFERENCES Puzzles(puzzle_num))")
+    cur.execute("CREATE TABLE IF NOT EXISTS Users_Puzzles(username TEXT NOT NULL, puzzle_num TEXT NOT NULL, time_found TEXT, time_completed TEXT, attempts INT, PRIMARY KEY(username, puzzle_num), FOREIGN KEY(username) REFERENCES Users(username), FOREIGN KEY(puzzle_num) REFERENCES Puzzles(puzzle_num))")
     
     #commit changes to database
     con.commit()
@@ -172,7 +172,7 @@ def foundPuzzle(username, puzzle_num):
             
             if not found:
                 #Add row to User_Puzzle table
-                cur.execute("INSERT INTO Users_Puzzles(username, puzzle_num, time_found, time_completed) VALUES(?, ?, ?, ?)", (username, puzzle_num, datetime.datetime.now(), ''))
+                cur.execute("INSERT INTO Users_Puzzles(username, puzzle_num, time_found, time_completed, attempts) VALUES(?, ?, ?, ?, ?)", (username, puzzle_num, datetime.datetime.now(), '', 0))
                 
                 con.commit()
                 con.close()
@@ -215,13 +215,19 @@ def solvePuzzle(username, puzzle_num, answer):
             return ("1", "Puzzle not found")
         else:
             #verify that user has found the puzzle
-            cur.execute("SELECT * from Users_Puzzles WHERE puzzle_num=? AND username=?", (puzzle_num, username,))
-            found = cur.fetchall()
+            cur.execute("SELECT attempts from Users_Puzzles WHERE puzzle_num=? AND username=?", (puzzle_num, username,))
+            attempt_num = cur.fetchall()
             
-            if not found:
+            if not attempt_num:
                 con.close()
                 return ("2", "User has not found puzzle")
             else:
+                #increment number of attempts
+                new_attempt = attempt_num[0][0] + 1
+                query = """Update Users_Puzzles set attempts = ? where puzzle_num = ? and username = ?"""
+                data = (new_attempt, puzzle_num, username)
+                cur.execute(query, data)
+                con.commit()
                 #verify that answer is correct
                 if (solution[0][0] == answer):
                     #update User_Puzzle table to include time_completed
@@ -286,7 +292,9 @@ def getHint(username, puzzle_num):
 '''
 Method for printing user stats
 parameter: username -- user should already be logged in
-
+return:
+    0 if successful
+    1 if database error
 '''
 
 def getStats(username):
@@ -306,23 +314,80 @@ def getStats(username):
             stats = stats + "No puzzles found"
         else:
             for num in puzzles:
-                found = False
+                isFound = False
                 for line in rows:
                     if int(line[1])==int(num[0]):
-                        found = True
-                        if len(line) != 4:
+                        isFound = True
+                        if len(line) != 5:
                             con.close()
                             return ("1", "DATABASE ERROR")
                         else:
                             stats = stats + "Puzzle " + line[1] + "\n"
                             stats = stats + "\tTime Found: " + line[2] + "\n"
                             stats = stats + "\tTime Completed: " + line[3] + "\n"
+                            stats = stats + "\tNumber of Attempts: " + str(line[4]) + "\n"
                         break
-                if found == False:
+                if isFound == False:
                     
                     stats = stats + "Puzzle " + str(num[0]) + ": not found\n"    
         con.close()
         return ("0", stats)
+    except:
+        print(Error)
+        con.close()
+        return ("1", "DATABASE ERROR")
+
+'''
+Method for sorting the user data
+'''
+
+
+
+'''
+Method for displaying overall leaderboard
+'''
+
+def getLeaderboard():
+    #establish connection with database
+    con = connection()
+    #create cursor object to execute database functions
+    cur = con.cursor()
+    
+    try:
+        leaderboard = ''
+        #get all users
+        cur.execute("Select username from Users")
+        allUsers = cur.fetchall()
+        usersData = []
+        #get number of solves and finds from each player
+        for u in allUsers:
+            #get number of finds
+            cur.execute("SELECT time_found from Users_Puzzles WHERE username=?", u)
+            finds = cur.fetchall()
+            numFinds = 0
+            for f in finds:
+                if(f[0] != ''):
+                    numFinds = numFinds + 1
+            
+            #get number of solves
+            cur.execute("SELECT time_completed from Users_Puzzles WHERE username=?", u)
+            
+            solves = cur.fetchall()
+            numSolves = 0
+            for s in solves:
+                if(s[0] != ''):
+                    numSolves = numSolves + 1
+            
+            #save in tuple
+            data = (numSolves, numFinds, u[0])
+            #insert into list
+            usersData.append(data)
+        
+        usersData = sorted(usersData, reverse=True)
+        print(usersData)
+        for user in usersData:
+            leaderboard = leaderboard + "User: " + user[2] + "\tSolves: " + str(user[0]) + "\tFinds: " + str(user[1]) + "\n"
+        return ("0", leaderboard)
     except:
         print(Error)
         con.close()
@@ -344,11 +409,37 @@ def dropTables():
     
 
 def main():
-    #dropTables()
+    dropTables()
     initializeTables()
     
-    print(getStats("A")[1])
-    print(getStats("B")[1])
+    print(newUser("A", "A"))
+    print(newUser("B", "B"))
+    print(newUser("C", "C"))
+    print(loginUser("A", "A"))
+    
+    print(foundPuzzle("A", "1"))
+    print(foundPuzzle("A", "2"))
+    print(foundPuzzle("A", "3"))
+    print(foundPuzzle("A", "4"))
+    print(foundPuzzle("A", "5"))
+    
+    print(foundPuzzle("B", "1"))
+    print(foundPuzzle("B", "2"))
+    print(foundPuzzle("B", "3"))
+    print(foundPuzzle("B", "4"))
+    print(foundPuzzle("B", "5"))
+    
+    print(foundPuzzle("C", "1"))
+    print(foundPuzzle("C", "2"))
+    print(foundPuzzle("C", "3"))
+    
+    print(solvePuzzle("A", "3", "hello"))
+    print(solvePuzzle("A", "3", "13"))
+    print(solvePuzzle("A", "1", "13"))
+    
+    print(solvePuzzle("C", "3", "13"))
+    
+    print(getLeaderboard()[1])
     
     '''
     print("Testing adding new Users")
@@ -414,6 +505,7 @@ def main():
 if __name__ == '__main__':
     main()
     
+
 
 
 
