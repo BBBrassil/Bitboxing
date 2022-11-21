@@ -54,28 +54,26 @@ def selectProtocol():
     else:
         #get which protocol is being choosen
         command = protocols.curselection()[0]
-        #check if leaderboard
-        if(command == 3):
-            #run leaderboard
-            print("leaderboard")
+        #verify logged in
+        if(usernameRoot["text"] == NO_USER):
+            print("not logged in")
+            errorLbl["text"] = "Must login first"
         else:
-            #if not, verify logged in
-            if(usernameRoot["text"] == NO_USER):
-                print("not logged in")
-                errorLbl["text"] = "Must login first"
-            else:
-                #open appropriate window
-                if(command == 0):
-                    findWindow(usernameRoot["text"])
-                elif(command == 1):
-                    #run solve
-                    solveWindow(usernameRoot["text"])
-                elif(command == 2):
-                    #run hint
-                    hintWindow(usernameRoot["text"])
-                elif(command == 4):
-                    #run stats
-                    statsWindow(usernameRoot["text"])
+            #open appropriate window
+            if(command == 0):
+                findWindow(usernameRoot["text"])
+            elif(command == 1):
+                #run solve
+                solveWindow(usernameRoot["text"])
+            elif(command == 2):
+                #run hint
+                hintWindow(usernameRoot["text"])
+            elif(command == 3):
+                #run leaderboard
+                leaderboardWindow(usernameRoot["text"])
+            elif(command == 4):
+                #run stats
+                statsWindow(usernameRoot["text"])
     
 '''
 protocol Windows
@@ -203,10 +201,29 @@ def statsWindow(username):
     statsWindow.mainloop()
 
 '''
-    
-def leaderboardWindow():
-    
+LEADERBOARD PROTOCOL    
 '''
+
+def leaderboardWindow(username):
+    leaderboardWindow = Toplevel(root)
+    leaderboardWindow.title("Leaderboard")
+    leaderboardWindow.geometry("350x350")
+    
+    bitboxing_message_formatting.send_msg(s, bitboxing_message_formatting.format_request(username, "LEADERBOARD"))
+    response = bitboxing_message_formatting.parse_response(bitboxing_message_formatting.receive_msg(s))
+    
+    Label(leaderboardWindow, text=response[1], justify=LEFT).pack()
+    
+    backBtn = Button(leaderboardWindow, text="Go Back", command=leaderboardWindow.destroy)
+    backBtn.pack(side=BOTTOM)
+    
+    leaderboardWindow.mainloop()
+    
+
+'''
+defining main window
+'''
+
 Label(root, text='Choose an option').pack()
 usernameRoot = Label(root, text=NO_USER)
 usernameRoot.place(x=10,y=25)
