@@ -49,6 +49,9 @@ def solveHandler(username, args):
 def statsHandler(username):
     return bitboxing_database.getStats(username)
 
+def leaderboardHandler():
+    return bitboxing_database.getLeaderboard()
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 s.bind(('', 9999))
@@ -96,6 +99,8 @@ while True:
                 serverResponse = solveHandler(clientMessage[0], clientMessage[2])
             elif(clientMessage[1] == "STATS"):
                 serverResponse = statsHandler(clientMessage[0])
+            elif(clientMessage[1] == "LEADERBOARD"):
+                serverResponse = leaderboardHandler()
             else:
                 serverResponse = ("2", "Not valid protocol")
         else:
