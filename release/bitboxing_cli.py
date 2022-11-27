@@ -100,6 +100,9 @@ def print_not_found_yet(code):
 
     print("You have not found '" + code + "' yet!")
 
+def print_already_solved():
+    print("You have already solved this puzzle!")
+
 def print_score(msg):
     """
     Prints a BBTP SCORE response payload.
@@ -213,7 +216,7 @@ def handle_hint(sender, code):
     if response[0] == bbtp.STATUS_OK:
         print(response[1])
     elif response[0] == bbtp.STATUS_OUT_OF_ORDER:
-        print_not_found_yet(code)
+        print_already_solved()
     elif response[0] == bbtp.STATUS_NOT_FOUND:
         print_invalid_code(code)
     elif response[0] == bbtp.STATUS_EXCEPTION:
@@ -245,7 +248,7 @@ def handle_solve(sender, code):
     if response[0] == bbtp.STATUS_OK:
         print("Correct!")
     elif response[0] == bbtp.STATUS_OUT_OF_ORDER:
-        print("You have already solved this!")
+        print_already_solved()
     elif response[0] == bbtp.STATUS_NOT_FOUND:
         print_invalid_code(code)
     elif response[0] == bbtp.STATUS_EXCEPTION:
