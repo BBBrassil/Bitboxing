@@ -265,7 +265,7 @@ class PuzzleMenu(Frame):
         if response[0] == bbtp.STATUS_OK:
             messagebox.showinfo("Puzzle", "Correct!")
         elif response[0] == bbtp.STATUS_INCORRECT:
-            messagebox.showwarning("Sorry, that is not correct.")
+            messagebox.showwarning("Puzzle", "Sorry, that is not correct.")
         elif response[0] == bbtp.STATUS_OUT_OF_ORDER:
             self.warning_already_solved()
         else:
@@ -332,7 +332,7 @@ class MyScore(Frame):
 
         tk.Label(self, text="My Score", font=controller.font_title).pack(side="top", fill="x", pady=10)
         
-        lbl_response = tk.Label(self, text="", font=self.controller.fixed, justify=tk.LEFT)
+        lbl_response = tk.Label(self, text="", font=self.controller.font_fixed, justify=tk.LEFT)
         lbl_response.pack()
         self.response = lbl_response
 
