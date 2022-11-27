@@ -15,15 +15,41 @@ PORT = 9999
 VERSION = "0.1"
 
 class Frame(tk.Frame):
+    """
+    Parent class for each frame of the GUI application.
+    """
+    
     def __init__(self, parent, controller, *args):
+        """
+        Constructor.
+
+        @param {tk.Frame}     parent     Parent frame
+        @param {BitboxingGui} controller Root application   
+        """
+
         tk.Frame.__init__(self, parent)
         self.controller = controller
     
     def on_load(self, *args):
+        """
+        Hook that is called when a frame is loaded.
+        """
+
         pass
 
 class BitboxingGui(tk.Tk):
+    """
+    Bitboxing Graphical User Interface.
+    Handles switching between different frames of the GUI and making requests to the server.
+    """
+
     def __init__(self, width, height, *args, **kwargs):
+        """
+        Constructor.
+
+        @param {int} width  Preferred window width
+        @param {int} height Preferred window height
+        """
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.width = width
@@ -52,6 +78,12 @@ class BitboxingGui(tk.Tk):
         self.load("Login")
 
     def load(self, name, *args):
+        """
+        Loads a specified frame.
+
+        @param {str} name Name of frame to load
+        """
+
         frame = self.frames[name]
         frame.on_load(*args)
         frame.tkraise()
@@ -78,7 +110,19 @@ class BitboxingGui(tk.Tk):
         messagebox.showerror(title="Error", message="An unknown error has occurred.")
 
 class Login(Frame):
+    """
+    Login Frame.
+    Allows a user to register or login.
+    """
+
     def __init__(self, parent, controller):
+        """
+        Constructor.
+
+        @param {tk.Frame}     parent     Parent frame
+        @param {BitboxingGui} controller Root application   
+        """
+
         Frame.__init__(self, parent, controller)
         
         tk.Label(self, text="Login", font=controller.font_title).pack(side="top", fill="x", pady=10)
@@ -96,6 +140,12 @@ class Login(Frame):
         tk.Button(self, text="Login", command=lambda: self.login()).pack()
     
     def on_load(self, *args):
+        """
+        Clears username and login entries.
+
+        Side effects: controller.sender is set to None
+        """
+
         self.username.delete(0, tk.END)
         self.username.insert(0, "")
 
@@ -105,6 +155,10 @@ class Login(Frame):
         self.controller.sender = None
     
     def login(self):
+        """
+        Validates a user's login info. Creates the user if it does not already exist.
+        """
+        
         username = self.username.get()
         password = self.password.get()
         sender = BitboxingSender(username, VERSION)
@@ -128,6 +182,13 @@ class Login(Frame):
 
 class MainMenu(Frame):
     def __init__(self, parent, controller):
+        """
+        Constructor.
+
+        @param {tk.Frame}     parent     Parent frame
+        @param {BitboxingGui} controller Root application   
+        """
+
         Frame.__init__(self, parent, controller)
         
         list_options = tk.Listbox(self)
@@ -142,6 +203,10 @@ class MainMenu(Frame):
         btn_select.pack()
     
     def select(self):
+        """
+        Goes to another frame based on the user's selection.
+        """
+        
         selection = self.options.curselection()
         if len(selection) == 1:
             option = selection[0]
@@ -153,11 +218,16 @@ class MainMenu(Frame):
                 self.controller.load("Leaderboard")
             elif option == 3:
                 self.controller.load("Login")
-            else:
-                messagebox.showinfo(title="Option", message=f"You chose option #{selection[0]}")
 
 class Scanner(Frame):
     def __init__(self, parent, controller):
+        """
+        Constructor.
+
+        @param {tk.Frame}     parent     Parent frame
+        @param {BitboxingGui} controller Root application   
+        """
+
         Frame.__init__(self, parent, controller)
 
         self.camera = cv.VideoCapture(0)
@@ -172,6 +242,12 @@ class Scanner(Frame):
         tk.Button(self, text="Cancel", command=lambda: controller.load("MainMenu")).pack()
 
     def scan(self):
+        """
+        Opens QR code scanner.
+
+        Side effects: code is set the QR code that is scanned (empty string until one is scanned)
+        """
+        
         _, frame = self.camera.read()
         img = Image.fromarray(cv.cvtColor(cv.flip(frame, 1), cv.COLOR_BGR2RGBA))
         self.scanner.imgtk = ImageTk.PhotoImage(image=img)
@@ -185,6 +261,13 @@ class Scanner(Frame):
         self.scanner.after(10, self.scan if self.code == "" else self.stop_scan)
 
     def stop_scan(self):
+        """
+        Goes to PuzzleMenu frame if a Bitboxing QR code is successfully scanned.
+        Displays an error message if an invalid code was scanned.
+
+        Side effects: code is set to an empty string if an invalid code was scanned.
+        """
+        
         self.scanner.configure(image="")
 
         sender = self.controller.sender
@@ -200,10 +283,21 @@ class Scanner(Frame):
             self.controller.unknown_error()
     
     def on_load(self, *args):
+        """
+        Starts the QR scanner.
+        """
+        
         self.scan()
 
 class PuzzleMenu(Frame):
     def __init__(self, parent, controller):
+        """
+        Constructor.
+
+        @param {tk.Frame}     parent     Parent frame
+        @param {BitboxingGui} controller Root application   
+        """
+
         Frame.__init__(self, parent, controller)
         
         
@@ -240,6 +334,15 @@ class PuzzleMenu(Frame):
         self.code = ""
     
     def on_load(self, *args):
+        """
+        Shows the puzzle question and clears the hint, guess, and leaderboard.
+
+        Side effects: code is modified
+
+        @param {str} args[0] Puzzle ID
+        @param {str} args[1] Puzzle question
+        """
+
         self.question["text"] = ""
         self.hint["text"] = ""
         self.guess.delete(0, tk.END)
@@ -249,6 +352,11 @@ class PuzzleMenu(Frame):
         self.question["text"] = args[1]
     
     def show_hint(self):
+        """
+        Shows the puzzle hint or an error message if the player has already solved the puzzle,
+        or if something else goes wrong.
+        """
+        
         sender = self.controller.sender
         response = self.controller.make_request(sender.handle_hint(self.code))
         
@@ -260,6 +368,11 @@ class PuzzleMenu(Frame):
             self.controller.unknown_error()
     
     def solve(self):
+        """
+        Attempts to solve the puzzle using the player's input.
+        Displays a message box with the result.
+        """
+        
         sender = self.controller.sender
         response = self.controller.make_request(sender.handle_solve(self.code, self.guess.get()))
 
@@ -273,9 +386,17 @@ class PuzzleMenu(Frame):
             self.controller.unknown_error()
     
     def warning_already_solved(self):
+        """
+        Shows a warning message box for if a puzzle has already been solved.
+        """
+        
         messagebox.showwarning("Puzzle", "You have already solved this puzzle!")
     
     def show_leaderboard(self):
+        """
+        Shows the puzzle leaderboard.
+        """
+        
         sender = self.controller.sender
         response = self.controller.make_request(sender.handle_cache_leaderboard(self.code))
 
@@ -285,6 +406,13 @@ class PuzzleMenu(Frame):
             self.controller.unknown_error()
 
     def format_leaderboard(self, msg):
+        """
+        Formats a CACHE_LEADERBOARD response payload into a readable string.
+
+        @param  {str} msg List of player names as JSON-formatted string
+        @return {str}
+        """
+
         leaderboard = json.loads(msg)
         
         s = ""
@@ -295,6 +423,13 @@ class PuzzleMenu(Frame):
 
 class Leaderboard(Frame):
     def __init__(self, parent, controller):
+        """
+        Constructor.
+
+        @param {tk.Frame}     parent     Parent frame
+        @param {BitboxingGui} controller Root application   
+        """
+
         Frame.__init__(self, parent, controller)
         
         tk.Label(self, text="Leaderboard", font=controller.font_title).pack(side="top", fill="x", pady=10)
@@ -304,18 +439,12 @@ class Leaderboard(Frame):
         self.response = lbl_response
 
         tk.Button(self, text="Go Back", command=lambda: self.controller.load("MainMenu")).pack(side=tk.BOTTOM)
-
-    def format_leaderboard(self, msg):
-        leaderboard = [bbdata.PlayerScore.from_dict(x) for x in json.loads(msg)]
-
-        s = "".ljust(4) + "  " + "Player".ljust(40) + "  " + "Finds".ljust(6) + "  " + "Solves".ljust(6) + "\n"
-        for i in range(len(leaderboard)):
-            x = leaderboard[i]
-            s += str(i + 1).ljust(4) + "  " + x.player().ljust(40) + "  " + str(x.finds()).ljust(6) + "  " + str(x.solves()).ljust(6) + "\n"
-        
-        return s
     
     def on_load(self, *args):
+        """
+        Shows the leaderboard or an error message if something goes wrong.
+        """
+        
         self.response["text"] = ""
         sender = self.controller.sender
         response = self.controller.make_request(sender.handle_leaderboard())
@@ -327,8 +456,32 @@ class Leaderboard(Frame):
         else:
             self.controller.unknown_error()
 
+    def format_leaderboard(self, msg):
+        """
+        Formats a LEADERBOARD response payload into a readable string.
+
+        @param  {str} msg List of PlayerScore objects as JSON-formatted string
+        @return {str}
+        """
+
+        leaderboard = [bbdata.PlayerScore.from_dict(x) for x in json.loads(msg)]
+
+        s = "".ljust(4) + "  " + "Player".ljust(40) + "  " + "Finds".ljust(6) + "  " + "Solves".ljust(6) + "\n"
+        for i in range(len(leaderboard)):
+            x = leaderboard[i]
+            s += str(i + 1).ljust(4) + "  " + x.player().ljust(40) + "  " + str(x.finds()).ljust(6) + "  " + str(x.solves()).ljust(6) + "\n"
+        
+        return s
+
 class MyScore(Frame):
     def __init__(self, parent, controller):
+        """
+        Constructor.
+
+        @param {tk.Frame}     parent     Parent frame
+        @param {BitboxingGui} controller Root application   
+        """
+
         Frame.__init__(self, parent, controller)
 
         tk.Label(self, text="My Score", font=controller.font_title).pack(side="top", fill="x", pady=10)
@@ -338,16 +491,12 @@ class MyScore(Frame):
         self.response = lbl_response
 
         tk.Button(self, text="Go Back", command=lambda: self.controller.load("MainMenu")).pack(side=tk.BOTTOM)
-
-    def format_my_score(self, msg):
-        score = bbdata.PlayerScore.from_dict(json.loads(msg))
-        
-        s = f"Finds:  {score.finds()}\n" + \
-            f"Solves: {score.solves()}\n"
-        
-        return s
     
     def on_load(self, *args):
+        """
+        Shows the player' score or an error message if something goes wrong.
+        """
+        
         self.response["text"] = ""
         sender = self.controller.sender
         response = self.controller.make_request(sender.handle_score(sender.id()))
@@ -358,6 +507,21 @@ class MyScore(Frame):
             messagebox.showerror("My Score Error", response[1])
         else:
             self.controller.unknown_error()
+
+    def format_my_score(self, msg):
+        """
+        Formats a SCORE response payload into a readable string.
+
+        @param {str} msg JSON object containing score data
+        @return {str}
+        """
+        
+        score = bbdata.PlayerScore.from_dict(json.loads(msg))
+        
+        s = f"Finds:  {score.finds()}\n" + \
+            f"Solves: {score.solves()}\n"
+        
+        return s
     
 if __name__ == "__main__":
     app = BitboxingGui(800, 600)

@@ -143,7 +143,7 @@ def print_cache_leaderboard(msg):
 
 def login():
     """"
-    Validates a
+    Validates a user's login info. Creates the user if it does not already exist.
     @return {BitboxingSender} Authenticated BBTP sender, None if login failed
     """
     
