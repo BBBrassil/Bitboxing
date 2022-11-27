@@ -231,7 +231,7 @@ class PuzzleMenu(Frame):
         btn_leaderboard = tk.Button(self, text="Leaderboard", command=self.show_leaderboard)
         btn_leaderboard.place(x=200, y=350)
 
-        lbl_leaderboard = tk.Label(self, text="", font=self.controller.font_fixed)
+        lbl_leaderboard = tk.Label(self, text="", font=self.controller.font_fixed, justify=tk.LEFT)
         lbl_leaderboard.place(x=200, y=425)
         self.leaderboard = lbl_leaderboard
 
@@ -243,6 +243,7 @@ class PuzzleMenu(Frame):
         self.question["text"] = ""
         self.hint["text"] = ""
         self.guess.delete(0, tk.END)
+        self.leaderboard["text"] = ""
 
         self.code = args[0]
         self.question["text"] = args[1]
