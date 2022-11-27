@@ -2,7 +2,7 @@ import bitboxing_data as bbdata
 from functools import cmp_to_key
 import sqlite3 as sqlite
 
-DEBUG = True
+DEBUG = False
 
 class BitboxingSql:
     """
@@ -32,18 +32,22 @@ class BitboxingSql:
         Sets up the database by creating tables if they do not exist.
         """
 
+        print("Setting up database...")
+
         connection = self.connect()
         cursor = connection.cursor()
         
         good = True
         for x in ["Users", "Puzzles", "Finds"]:
-            cursor.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name=?", (x,))
+            cursor.execute("SELECT * FROM sqlite_master WHERE type='table' AND name=?", (x,))
             found = cursor.fetchone()
-            if found == None:
+            if found is None:
+                print(f"Database is missing table '{x}'!")
                 good = False
                 break
         
         if not good or DEBUG:
+            print("Creating database...")
             self.create()
         
         connection.close()
@@ -174,7 +178,7 @@ class BitboxingSql:
 
         connection.close()
         
-        return found != None
+        return found is not None
     
     def is_valid_password(self, username, password):
         """
@@ -193,7 +197,7 @@ class BitboxingSql:
         
         connection.close()
         
-        return found and found[0] == password
+        return found is not None and found[0] == password
     
     def is_valid_cache(self, cache):
         """
@@ -211,7 +215,7 @@ class BitboxingSql:
 
         connection.close()
 
-        return found != None
+        return found is not None
 
     
     def players(self):
